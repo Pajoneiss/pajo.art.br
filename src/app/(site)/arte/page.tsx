@@ -87,7 +87,7 @@ function ExpandableSection({
             isOpen ? 'grid-rows-[1fr] opacity-100 mt-10' : 'grid-rows-[0fr] opacity-0 mt-0'
           }`}
         >
-          <div className="overflow-hidden">
+          <div className="overflow-hidden min-h-0">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-start pb-8">
               {items.slice(0, showAll ? items.length : defaultShowCount).map(renderItem)}
             </div>
@@ -123,7 +123,7 @@ export default function Home() {
       <ScrollVideoHero />
 
       {/* 2. Portfolio / Músicas (Acordeão) */}
-      <div className="mt-20">
+      <div id="portfolio" className="mt-20">
         <ExpandableSection 
           title={t.portfolio.title}
           items={musicEmbeds}

@@ -59,7 +59,7 @@ export default function EmbedWidget({ url }: EmbedWidgetProps) {
   }
 
   // 4. Spotify
-  const spotifyMatch = url.match(/spotify\.com\/(artist|track|album|playlist)\/([A-Za-z0-9]+)/);
+  const spotifyMatch = url.match(/spotify\.com\/(?:embed\/)?(artist|track|album|playlist)\/([A-Za-z0-9]+)/);
   if (spotifyMatch && spotifyMatch[1] && spotifyMatch[2]) {
     const type = spotifyMatch[1];
     const id = spotifyMatch[2];
@@ -77,19 +77,35 @@ export default function EmbedWidget({ url }: EmbedWidgetProps) {
   }
 
   // 5. Audius
-  const audiusMatch = url.match(/audius\.co\/([^\/]+)\/([^\/?]+)/);
-  if (audiusMatch && audiusMatch[1] && audiusMatch[2]) {
-    const user = audiusMatch[1];
-    const track = audiusMatch[2];
+  const audiusEmbedMatch = url.match(/audius\.co\/embed\/track\/([A-Za-z0-9_-]+)/);
+  if (audiusEmbedMatch && audiusEmbedMatch[1]) {
+    const trackId = audiusEmbedMatch[1];
     return (
       <div className="relative w-full h-[480px] rounded-xl overflow-hidden shadow-2xl border border-white/10 bg-black">
         <iframe
-          src={`https://audius.co/embed/track/${user}/${track}?flavor=card`}
+          src={`https://audius.co/embed/track/${trackId}?flavor=card`}
           className="absolute top-0 left-0 w-full h-full border-none"
           allow="encrypted-media"
         />
       </div>
     );
+  }
+
+  const audiusMatch = url.match(/audius\.co\/([^\/]+)\/([^\/?]+)/);
+  if (audiusMatch && audiusMatch[1] && audiusMatch[2]) {
+    const user = audiusMatch[1];
+    const track = audiusMatch[2];
+    if (user !== "embed") {
+      return (
+        <div className="relative w-full h-[480px] rounded-xl overflow-hidden shadow-2xl border border-white/10 bg-black">
+          <iframe
+            src={`https://audius.co/embed/track/${user}/${track}?flavor=card`}
+            className="absolute top-0 left-0 w-full h-full border-none"
+            allow="encrypted-media"
+          />
+        </div>
+      );
+    }
   }
 
   // 6. SoundCloud
