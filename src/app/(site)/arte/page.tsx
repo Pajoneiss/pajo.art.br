@@ -179,12 +179,20 @@ export default function Home() {
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center bg-black/60 backdrop-blur-2xl border border-white/10 p-8 md:p-16 rounded-[3rem] shadow-[0_0_80px_rgba(0,0,0,0.6)]">
           <div className="order-2 lg:order-1 relative w-full aspect-[3/4] rounded-3xl overflow-hidden border border-white/20 shadow-2xl group">
             <video 
+              src="/media/Stop-time-mobile.mp4" 
+              autoPlay 
+              loop 
+              muted 
+              playsInline
+              className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-1000 md:hidden"
+            />
+            <video 
               src="/media/Stop Time.mp4" 
               autoPlay 
               loop 
               muted 
               playsInline
-              className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-1000"
+              className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-1000 hidden md:block"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-90"></div>
           </div>
