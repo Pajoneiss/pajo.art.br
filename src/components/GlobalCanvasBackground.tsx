@@ -27,8 +27,6 @@ export default function GlobalCanvasBackground() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    // Mobile usa apenas 121 frames em BAIXA resolução para consumo de RAM zero
-    // Desktop usa 361 frames HD
     const frameCount = isMobile ? 121 : 361;
     const folder = isMobile ? "frames_mobile" : "frames";
     const images: HTMLImageElement[] = new Array(frameCount);
@@ -50,14 +48,9 @@ export default function GlobalCanvasBackground() {
         renderHeight = canvas.height;
         renderWidth = canvas.height * imgRatio;
         
-        if (isMobile) {
-            // x = 0 trava o canto esquerdo do vídeo no canto esquerdo do celular
-            // garantindo que o seu rosto, que está na esquerda, não seja cortado.
-            x = 0; 
-        } else {
-            // Desktop: Centro exato
-            x = (canvas.width - renderWidth) / 2;
-        }
+        // Mantém EXATAMENTE centralizado. 
+        // Deslocar para x=0 empurrava o vídeo muito para a direita, deixando a tela preta no lado esquerdo.
+        x = (canvas.width - renderWidth) / 2;
         y = 0;
       } else {
         renderWidth = canvas.width;
@@ -98,7 +91,7 @@ export default function GlobalCanvasBackground() {
         trigger: document.body,
         start: "top top",
         end: "bottom bottom",
-        scrub: 0.1, // Smoothing super leve
+        scrub: 0.1,
       },
     });
 

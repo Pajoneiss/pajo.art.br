@@ -1,9 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
-import ScrollVideoHero from "@/components/ScrollVideoHero";
 import EmbedWidget from "@/components/EmbedWidget";
+import ScrollVideoHero from "@/components/ScrollVideoHero";
 import { socials, portfolio, musicEmbeds, mediaEmbeds, visualEmbeds, translations } from "@/content/data";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -78,7 +77,57 @@ export default function Home() {
       {/* 1. Hero Text Overlay */}
       <ScrollVideoHero />
 
-      {/* 2. Manifesto / About Section */}
+      {/* 2. Portfolio / Músicas (Acordeão) */}
+      <ExpandableSection 
+        title={t.portfolio.title}
+        items={musicEmbeds}
+        renderItem={(item) => (
+          <div key={`embed-${item.id}`} className="w-full shadow-2xl rounded-xl border border-white/10 overflow-hidden">
+            <EmbedWidget url={item.url} />
+          </div>
+        )}
+      />
+
+      {/* 3. Mídia / Vídeos (Acordeão) */}
+      <ExpandableSection 
+        title={t.portfolio.media}
+        items={mediaEmbeds}
+        renderItem={(item) => (
+          <div key={`media-${item.id}`} className="w-full shadow-2xl rounded-xl border border-white/10 overflow-hidden">
+            <EmbedWidget url={item.url} />
+          </div>
+        )}
+      />
+
+      {/* 4. Visuais / Instagram (Acordeão) */}
+      <ExpandableSection 
+        title={t.portfolio.visuals}
+        items={visualEmbeds}
+        renderItem={(item) => (
+          <div 
+            key={`visual-${item.id}`} 
+            className={`w-full shadow-2xl rounded-xl border border-white/10 overflow-hidden ${
+              item.url.includes("behance") ? "md:col-span-2 lg:col-span-3" : ""
+            }`}
+          >
+            <EmbedWidget url={item.url} />
+          </div>
+        )}
+      />
+
+      {/* 5. Minhas Redes (Acordeão) */}
+      <ExpandableSection 
+        title={`${t.work.title} ${t.work.subtitle}`}
+        items={portfolio}
+        defaultShowCount={6}
+        renderItem={(item) => (
+          <div key={item.id} className="flex flex-col gap-2">
+            <EmbedWidget url={item.url} />
+          </div>
+        )}
+      />
+
+      {/* 6. Manifesto / About Section (Por último) */}
       <section id="about" className="relative py-32 px-6 z-10 border-y border-white/5">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div className="order-2 lg:order-1 relative w-full aspect-[3/4] rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
@@ -98,11 +147,14 @@ export default function Home() {
             <div className="space-y-6 text-white/70 font-sans text-lg leading-relaxed drop-shadow-md">
               <p className="pl-4 border-l-2 border-brand/50">
                 {t.about.text1}
-                <br /><br />
-                <span className="text-white/50 italic text-sm font-serif">
-                  {t.about.text2}
-                </span>
               </p>
+              {t.about.text2 && (
+                <p className="pl-4">
+                  <span className="text-white/50 italic text-sm font-serif">
+                    {t.about.text2}
+                  </span>
+                </p>
+              )}
             </div>
 
             <div className="flex flex-wrap gap-6 pt-8 font-mono uppercase text-sm tracking-widest">
@@ -116,61 +168,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      {/* 3. Selected Work / Redes - Mantemos fixo pois são apenas links leves */}
-      <section id="work" className="py-32 px-6 z-10 relative">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="font-sans text-4xl md:text-6xl font-bold uppercase tracking-tighter mb-16 text-center text-white drop-shadow-lg">
-            {t.work.title} <span className="text-white/50">{t.work.subtitle}</span>
-          </h2>
-          
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {portfolio.map((item) => (
-              <div key={item.id} className="flex flex-col gap-2">
-                <EmbedWidget url={item.url} />
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 4. Portfolio / Músicas (Acordeão) */}
-      <ExpandableSection 
-        title={t.portfolio.title}
-        items={musicEmbeds}
-        renderItem={(item) => (
-          <div key={`embed-${item.id}`} className="w-full shadow-2xl rounded-xl border border-white/10 overflow-hidden">
-            <EmbedWidget url={item.url} />
-          </div>
-        )}
-      />
-
-      {/* 5. Mídia / Vídeos (Acordeão) */}
-      <ExpandableSection 
-        title={t.portfolio.media}
-        items={mediaEmbeds}
-        renderItem={(item) => (
-          <div key={`media-${item.id}`} className="w-full shadow-2xl rounded-xl border border-white/10 overflow-hidden">
-            <EmbedWidget url={item.url} />
-          </div>
-        )}
-      />
-
-      {/* 6. Visuais / Instagram (Acordeão) */}
-      <ExpandableSection 
-        title={t.portfolio.visuals}
-        items={visualEmbeds}
-        renderItem={(item) => (
-          <div 
-            key={`visual-${item.id}`} 
-            className={`w-full shadow-2xl rounded-xl border border-white/10 overflow-hidden ${
-              item.url.includes("behance") ? "md:col-span-2 lg:col-span-3" : ""
-            }`}
-          >
-            <EmbedWidget url={item.url} />
-          </div>
-        )}
-      />
 
       {/* Footer */}
       <footer className="relative z-10 py-12 border-t border-white/10 text-center font-mono text-xs uppercase tracking-widest text-white/50 mt-16">
