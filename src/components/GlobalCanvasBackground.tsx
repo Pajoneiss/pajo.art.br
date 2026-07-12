@@ -63,7 +63,7 @@ export default function GlobalCanvasBackground() {
 
     const loadFrame = (i: number) => {
       const img = new Image();
-      img.src = `/media/${folder}/frame_${i.toString().padStart(3, "0")}.jpg`;
+      img.src = `/media/${folder}/frame_${i.toString().padStart(3, "0")}.webp`;
       img.onload = () => {
         loadedCount++;
         if (i === 0) render();
