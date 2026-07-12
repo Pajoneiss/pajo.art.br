@@ -115,7 +115,7 @@ function ExpandableSection({
 
 export default function Home() {
   const { language } = useLanguage();
-  const t = translations[language];
+  const t = translations[language] || translations["pt-BR"];
 
   return (
     <main className="min-h-screen selection:bg-brand selection:text-white pb-32">

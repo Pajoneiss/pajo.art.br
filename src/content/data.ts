@@ -5,6 +5,12 @@ export const translations: any = {
       subtitle: "Desenvolvedor Criativo • Produtor Musical",
       scroll: "Scroll to explore",
     },
+    nav: {
+      about: "SOBRE",
+      portfolio: "PORTFÓLIO",
+      contact: "CONTATO",
+      agency: "AGÊNCIA & GRAVADORA",
+    },
     about: {
       tag: "O Artista",
       text1: "Como DJ e produtor musical, exploro as frequências profundas da cura e da dança. Como designer e desenvolvedor criativo, construo experiências digitais imersivas e utilizo inteligência artificial para expandir as fronteiras da imaginação.",
@@ -26,6 +32,12 @@ export const translations: any = {
       subtitle: "Creative Developer • Music Producer",
       scroll: "Scroll to explore",
     },
+    nav: {
+      about: "ABOUT",
+      portfolio: "PORTFOLIO",
+      contact: "CONTACT",
+      agency: "AGENCY & LABEL",
+    },
     about: {
       tag: "The Artist",
       text1: "As a DJ and music producer, I explore the deep frequencies of healing and dance. As a designer and creative developer, I build immersive digital experiences and use artificial intelligence to push the boundaries of imagination.",
@@ -46,6 +58,12 @@ export const translations: any = {
       title: "PAJÔ",
       subtitle: "Desarrollador Creativo • Productor Musical",
       scroll: "Scroll to explore",
+    },
+    nav: {
+      about: "SOBRE MÍ",
+      portfolio: "PORTAFOLIO",
+      contact: "CONTACTO",
+      agency: "AGENCIA Y SELLO",
     },
     about: {
       tag: "El Artista",
