@@ -1,20 +1,10 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { webProjects } from "@/content/data";
 
-function ProjectCard({ project }: { project: { id: number; name: string; url: string } }) {
-  const [isHovered, setIsHovered] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768 || 'ontouchstart' in window || navigator.maxTouchPoints > 0);
-    };
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
+function ProjectCard({ project }: { project: { id: number; name: string; url: string; image?: string } }) {
+  const [imageError, setImageError] = useState(false);
 
   return (
     <a 
@@ -22,38 +12,46 @@ function ProjectCard({ project }: { project: { id: number; name: string; url: st
       target="_blank"
       rel="noopener noreferrer"
       className="group block relative"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="relative w-full aspect-[4/3] overflow-hidden rounded-xl border border-white/10 bg-black shadow-2xl transition-all duration-500 group-hover:border-brand/50 group-hover:-translate-y-2 group-hover:shadow-[0_20px_40px_rgba(255,85,0,0.15)]">
+      <div className="relative w-full aspect-[4/3] overflow-hidden rounded-xl border border-white/10 bg-black/60 shadow-2xl transition-all duration-500 group-hover:border-brand/50 group-hover:-translate-y-2 group-hover:shadow-[0_20px_40px_rgba(255,85,0,0.15)]">
         
-        {/* Placeholder / Loader */}
-        <div className="absolute inset-0 flex items-center justify-center bg-black/60">
-          <div className="flex flex-col items-center gap-3">
-            <div className="w-6 h-6 border-2 border-white/10 border-t-brand/50 rounded-full animate-spin"></div>
-            <span className="text-[10px] font-mono tracking-widest uppercase text-white/30 text-center px-4">
-              {isMobile ? "Toque para abrir" : (isHovered ? "Carregando Preview..." : "Passe o mouse para Preview")}
+        {/* Placeholder / Fallback for missing WEBP */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black">
+          <div className="flex flex-col items-center gap-2">
+            {!imageError && (
+               <div className="w-4 h-4 border-2 border-white/10 border-t-brand/50 rounded-full animate-spin"></div>
+            )}
+            <span className="text-white/20 font-mono tracking-widest text-[10px] uppercase text-center px-4">
+              {imageError ? "Print Indisponível (Adicione o WEBP)" : "Carregando Print..."}
             </span>
           </div>
         </div>
 
-        {/* Live Thumbnail - Só renderiza se estiver com o mouse em cima E não for mobile */}
-        {(!isMobile && isHovered) && (
-          <iframe 
-            src={project.url}
-            className="absolute top-0 left-0 w-[400%] h-[400%] scale-[0.25] origin-top-left pointer-events-none opacity-60 group-hover:opacity-100 transition-opacity duration-700 bg-white/5"
+        {/* WEBP Image Print */}
+        {project.image && !imageError && (
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img 
+            src={project.image}
+            alt={project.name}
+            className="absolute inset-0 w-full h-full object-cover object-top opacity-70 group-hover:opacity-100 transition-all duration-700 group-hover:scale-105"
+            loading="lazy"
+            onError={() => setImageError(true)}
+            onLoad={(e) => {
+               // Esconde o spinner de loading nativamente
+               (e.target as HTMLElement).previousElementSibling?.classList.add("hidden");
+            }}
           />
         )}
 
         {/* Content Overlay */}
-        <div className="absolute inset-0 z-10 flex flex-col justify-end p-6 bg-gradient-to-t from-black via-black/60 to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-300">
+        <div className="absolute inset-0 z-10 flex flex-col justify-end p-6 bg-gradient-to-t from-black via-black/40 to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-300">
           <h3 className="text-xl md:text-2xl font-sans font-bold text-white tracking-tighter drop-shadow-md">
             {project.name}
           </h3>
           <div className="flex items-center gap-2 mt-2">
             <span className="w-2 h-2 rounded-full bg-brand animate-pulse shadow-[0_0_10px_rgba(255,85,0,0.6)]"></span>
             <p className="text-[10px] font-mono text-white/70 uppercase tracking-widest group-hover:text-brand transition-colors">
-              {isMobile ? "Acessar Site ↗" : "Live Preview ↗"}
+              Acessar Site ↗
             </p>
           </div>
         </div>
@@ -83,10 +81,10 @@ export default function SitesPage() {
           </p>
         </div>
 
-        {/* Grid de Projetos Otimizado */}
+        {/* Grid de Projetos Otimizado com WEBP Estático */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
           {webProjects.map((project) => (
-            <ProjectCard key={project.id} project={project} />
+            <ProjectCard key={project.id} project={project as any} />
           ))}
         </div>
       </div>

@@ -1,10 +1,73 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import ScrollVideoHero from "@/components/ScrollVideoHero";
 import EmbedWidget from "@/components/EmbedWidget";
 import { socials, portfolio, musicEmbeds, mediaEmbeds, visualEmbeds, translations } from "@/content/data";
 import { useLanguage } from "@/context/LanguageContext";
+
+// Expandable Section Component to save performance
+function ExpandableSection({ 
+  title, 
+  items, 
+  renderItem,
+  defaultShowCount = 3 
+}: { 
+  title: string, 
+  items: any[], 
+  renderItem: (item: any) => React.ReactNode,
+  defaultShowCount?: number 
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [showAll, setShowAll] = useState(false);
+  
+  return (
+    <section className="py-8 px-6 z-10 relative bg-transparent border-t border-white/5">
+      <div className="max-w-7xl mx-auto">
+        
+        {/* Accordion Header */}
+        <button 
+          onClick={() => setIsOpen(!isOpen)}
+          className="w-full flex items-center justify-between text-left group py-8"
+        >
+          <h2 className="font-sans text-3xl md:text-5xl font-bold uppercase tracking-tighter text-white drop-shadow-lg group-hover:text-brand transition-colors">
+            {title}
+          </h2>
+          <div className="flex items-center gap-4">
+            <span className="text-xs font-mono text-white/30 uppercase tracking-widest hidden md:inline-block">
+               {isOpen ? "Fechar" : "Expandir"}
+            </span>
+            <span className="text-2xl text-white/50 group-hover:text-brand transition-colors">
+              {isOpen ? "−" : "+"}
+            </span>
+          </div>
+        </button>
+
+        {/* Accordion Content */}
+        {isOpen && (
+          <div className="mt-8 animate-in fade-in slide-in-from-top-4 duration-500">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
+              {items.slice(0, showAll ? items.length : defaultShowCount).map(renderItem)}
+            </div>
+            
+            {!showAll && items.length > defaultShowCount && (
+              <div className="mt-16 flex justify-center">
+                <button 
+                  onClick={() => setShowAll(true)}
+                  className="px-8 py-4 bg-black/50 text-white border border-white/20 hover:border-brand hover:text-brand transition-all duration-300 uppercase font-mono tracking-widest text-sm shadow-[0_0_15px_rgba(0,0,0,0.5)] hover:shadow-[0_0_25px_rgba(255,85,0,0.3)]"
+                >
+                  Ver Mais ({items.length - defaultShowCount})
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+
+      </div>
+    </section>
+  );
+}
 
 export default function Home() {
   const { language } = useLanguage();
@@ -54,7 +117,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 3. Selected Work (Dynamic Widgets) */}
+      {/* 3. Selected Work / Redes - Mantemos fixo pois são apenas links leves */}
       <section id="work" className="py-32 px-6 z-10 relative">
         <div className="max-w-7xl mx-auto">
           <h2 className="font-sans text-4xl md:text-6xl font-bold uppercase tracking-tighter mb-16 text-center text-white drop-shadow-lg">
@@ -71,61 +134,43 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 4. Portfolio Section */}
-      <section id="portfolio" className="py-32 px-6 z-10 relative bg-transparent border-t border-white/5">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="font-sans text-4xl md:text-6xl font-bold uppercase tracking-tighter mb-20 text-center text-white drop-shadow-lg">
-            {t.portfolio.title}
-          </h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
-            {musicEmbeds.map((item) => (
-              <div key={`embed-${item.id}`} className="w-full shadow-2xl rounded-xl border border-white/10 overflow-hidden">
-                <EmbedWidget url={item.url} />
-              </div>
-            ))}
+      {/* 4. Portfolio / Músicas (Acordeão) */}
+      <ExpandableSection 
+        title={t.portfolio.title}
+        items={musicEmbeds}
+        renderItem={(item) => (
+          <div key={`embed-${item.id}`} className="w-full shadow-2xl rounded-xl border border-white/10 overflow-hidden">
+            <EmbedWidget url={item.url} />
           </div>
-        </div>
-      </section>
+        )}
+      />
 
-      {/* 5. Media Section */}
-      <section id="media" className="py-32 px-6 z-10 relative bg-transparent border-t border-white/5">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="font-sans text-4xl md:text-6xl font-bold uppercase tracking-tighter mb-20 text-center text-white drop-shadow-lg">
-            {t.portfolio.media}
-          </h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
-            {mediaEmbeds.map((item) => (
-              <div key={`media-${item.id}`} className="w-full shadow-2xl rounded-xl border border-white/10 overflow-hidden">
-                <EmbedWidget url={item.url} />
-              </div>
-            ))}
+      {/* 5. Mídia / Vídeos (Acordeão) */}
+      <ExpandableSection 
+        title={t.portfolio.media}
+        items={mediaEmbeds}
+        renderItem={(item) => (
+          <div key={`media-${item.id}`} className="w-full shadow-2xl rounded-xl border border-white/10 overflow-hidden">
+            <EmbedWidget url={item.url} />
           </div>
-        </div>
-      </section>
+        )}
+      />
 
-      {/* 5. Visuals Section */}
-      <section id="visuals" className="py-32 px-6 z-10 relative bg-transparent border-t border-white/5">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="font-sans text-4xl md:text-6xl font-bold uppercase tracking-tighter mb-20 text-center text-white drop-shadow-lg">
-            {t.portfolio.visuals}
-          </h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
-            {visualEmbeds.map((item) => (
-              <div 
-                key={`visual-${item.id}`} 
-                className={`w-full shadow-2xl rounded-xl border border-white/10 overflow-hidden ${
-                  item.url.includes("behance") ? "md:col-span-2 lg:col-span-3" : ""
-                }`}
-              >
-                <EmbedWidget url={item.url} />
-              </div>
-            ))}
+      {/* 6. Visuais / Instagram (Acordeão) */}
+      <ExpandableSection 
+        title={t.portfolio.visuals}
+        items={visualEmbeds}
+        renderItem={(item) => (
+          <div 
+            key={`visual-${item.id}`} 
+            className={`w-full shadow-2xl rounded-xl border border-white/10 overflow-hidden ${
+              item.url.includes("behance") ? "md:col-span-2 lg:col-span-3" : ""
+            }`}
+          >
+            <EmbedWidget url={item.url} />
           </div>
-        </div>
-      </section>
+        )}
+      />
 
       {/* Footer */}
       <footer className="relative z-10 py-12 border-t border-white/10 text-center font-mono text-xs uppercase tracking-widest text-white/50 mt-16">
